@@ -11,8 +11,12 @@ export class UsersService {
     private userRepository: Repository<User>,
   ) {}
 
-  getHello(): string {
-    return 'Hello';
+  getAll(): Promise<User[]> {
+    return this.userRepository.find();
+  }
+
+  getUserById(id: number): Promise<User> {
+    return this.userRepository.findOneBy({ id });
   }
 
   async createUser(data: CreateUserDto): Promise<User> {
