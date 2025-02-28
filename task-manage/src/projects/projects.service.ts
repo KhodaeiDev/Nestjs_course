@@ -4,6 +4,7 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Project } from './entities/project.entity';
+import projectStatusEnum from './enums/projectStatusEnum';
 
 @Injectable()
 export class ProjectsService {
@@ -18,8 +19,13 @@ export class ProjectsService {
     return this.projectRepository.save(newProject);
   }
 
-  findAll() {
-    return `This action returns all projects`;
+  async findAll(status: projectStatusEnum) {
+    const query = this.projectRepository.createQueryBuilder('project');
+
+    if (status) {
+      await query.where('status = :status', { status });
+    }
+    return await query.getMany();
   }
 
   findOne(id: number) {
