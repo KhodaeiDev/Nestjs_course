@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Repository } from 'typeorm';
@@ -40,8 +40,12 @@ export class ProjectsService {
     };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} project`;
+  async findOne(id: number) {
+    const project = await this.projectRepository.findOneBy({ id });
+
+    if (!project) throw new NotFoundException('Project not Found!');
+
+    return project;
   }
 
   update(id: number, updateProjectDto: UpdateProjectDto) {
