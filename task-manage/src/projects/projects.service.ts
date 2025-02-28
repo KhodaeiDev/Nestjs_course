@@ -19,13 +19,25 @@ export class ProjectsService {
     return this.projectRepository.save(newProject);
   }
 
-  async findAll(status: projectStatusEnum) {
+  async findAll(
+    status?: projectStatusEnum,
+    limit: number = 5,
+    page: number = 1,
+  ) {
     const query = this.projectRepository.createQueryBuilder('project');
 
     if (status) {
       await query.where('status = :status', { status });
     }
-    return await query.getMany();
+
+    query.skip((page - 1) * limit).take(limit);
+    const project = await query.getMany();
+
+    return {
+      page: +page,
+      limit: +limit,
+      project,
+    };
   }
 
   findOne(id: number) {
