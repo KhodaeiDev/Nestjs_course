@@ -8,11 +8,14 @@ import {
   Delete,
   Query,
   Put,
+  HttpStatus,
+  Res,
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import projectStatusEnum from './enums/projectStatusEnum';
+import { Response } from 'express';
 
 @Controller('projects')
 export class ProjectsController {
@@ -24,12 +27,19 @@ export class ProjectsController {
   }
 
   @Get()
-  findAll(
+  async findAll(
+    @Res() res: Response,
     @Query('status') status?: projectStatusEnum,
     @Query('limit') limit: number = 5,
     @Query('page') page: number = 1,
   ) {
-    return this.projectsService.findAll(status, limit, page);
+    const data = await this.projectsService.findAll(status, limit, page);
+
+    return res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      message: 'All Projects',
+      data,
+    });
   }
 
   @Get(':id')
