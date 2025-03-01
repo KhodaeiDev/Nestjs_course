@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Repository } from 'typeorm';
@@ -48,8 +52,21 @@ export class ProjectsService {
     return project;
   }
 
-  update(id: number, updateProjectDto: UpdateProjectDto) {
-    return `This action updates a #${id} project`;
+  async update(id: number, updateProjectDto: UpdateProjectDto) {
+    const project = await this.projectRepository.findOneBy({ id });
+
+    if (!project) throw new NotFoundException('Project not Found!');
+
+    try {
+      const updateProject = await this.projectRepository.update(
+        id,
+        updateProjectDto,
+      );
+
+      return updateProject;
+    } catch {
+      throw new BadRequestException('Update Project faild');
+    }
   }
 
   remove(id: number) {
