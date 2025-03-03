@@ -1,4 +1,11 @@
-import { IsEnum, IsNotEmpty, IsString, Min, MinLength } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Min,
+  MinLength,
+} from 'class-validator';
 import projectStatusEnum from '../enums/projectStatusEnum';
 
 export class CreateProjectDto {
@@ -8,5 +15,6 @@ export class CreateProjectDto {
   name: string;
 
   @IsEnum(projectStatusEnum)
+  @IsOptional()
   status: projectStatusEnum;
 }
