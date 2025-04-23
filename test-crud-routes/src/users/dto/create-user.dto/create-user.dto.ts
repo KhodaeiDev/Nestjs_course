@@ -1,4 +1,4 @@
-import { IsBoolean, IsString } from 'class-validator';
+import { ArrayNotEmpty, IsArray, IsBoolean, IsString } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -6,4 +6,8 @@ export class CreateUserDto {
 
   @IsBoolean()
   isActive: boolean = false;
+
+  @IsArray()
+  @IsString({ each: true })
+  classes: string[];
 }

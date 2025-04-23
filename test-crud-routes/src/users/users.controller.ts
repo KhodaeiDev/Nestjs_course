@@ -1,16 +1,17 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto/create-user.dto';
 import { MobilePipe } from 'src/pipes/validation/mobile/mobile.pipe';
 import { get } from 'http';
+import { PaganationDto } from 'src/common/dto/paganation.dto/paganation.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  getAll(): object {
-    return this.usersService.getAll();
+  getAll(@Query() paganationQuery: PaganationDto): object {
+    return this.usersService.getAll(paganationQuery);
   }
 
   @Get(':id')

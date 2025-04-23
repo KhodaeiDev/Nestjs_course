@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Class } from './class.entity/class.entity';
 
 @Entity()
 export class User {
@@ -8,6 +15,7 @@ export class User {
   @Column()
   username: string;
 
-  @Column({ default: false })
-  isActive: boolean;
+  @JoinTable()
+  @ManyToMany((type) => Class, (cls) => cls.student, { cascade: true })
+  classes: Class[];
 }
