@@ -1,11 +1,13 @@
 import {
   Column,
   CreateDateColumn,
+  Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import userRoleEnum from '../enums/userRoleEnum';
 
+@Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;

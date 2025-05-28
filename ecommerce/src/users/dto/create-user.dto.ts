@@ -12,10 +12,8 @@ import { Transform } from 'class-transformer';
 
 export class CreateUserDto {
   @IsString()
-  @Matches(/^09\d{9}$/, { message: 'فرمت شماره موبایل معتبر نیست' })
-  @Transform(({ value }) => {
-    value.trim();
-  })
+  @Matches(/^.{11}$/, { message: 'فرمت شماره موبایل معتبر نیست' })
+  @Transform(({ value }) => value.trim())
   @IsNotEmpty()
   mobile: string;
 
