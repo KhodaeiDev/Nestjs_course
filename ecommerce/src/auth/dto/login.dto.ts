@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
-export class CreateUserDto {
+export class LoginDto {
   @IsString()
   @Matches(/^.{11}$/, { message: 'فرمت شماره موبایل معتبر نیست' })
   @Transform(({ value }) => value.trim())
