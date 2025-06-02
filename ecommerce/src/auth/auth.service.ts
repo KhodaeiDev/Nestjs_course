@@ -28,10 +28,13 @@ export class AuthService {
     return createUser;
   }
 
-  async login(loginDto: LoginDto, password: string) {
+  async login(loginDto: LoginDto) {
     const findUser = await this.usersService.findOneByMobile(loginDto.mobile);
 
-    const confirmPassword = await bcrypt.compare(password, findUser.password);
+    const confirmPassword = await bcrypt.compare(
+      loginDto.password,
+      findUser.password,
+    );
     if (!confirmPassword) {
       throw new UnauthorizedException('اطلاعات شما صحیح نمی باشد');
     }
