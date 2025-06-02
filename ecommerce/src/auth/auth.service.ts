@@ -14,30 +14,32 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto) {
+    await this.usersService.existMobile(registerDto.mobile);
+
     const hashedPassword = await bcrypt.hash(registerDto.password, 12);
 
-    return await this.usersService.create({
+    const createUser = await this.usersService.create({
       ...registerDto,
       password: hashedPassword,
       role: userRoleEnum.User,
     });
+    createUser.password = undefined;
+
+    return createUser;
   }
 
   async login(loginDto: LoginDto, password: string) {
     const findUser = await this.usersService.findOneByMobile(loginDto.mobile);
 
-    const confirmPassword = await bcrypt.compare(
-      password,
-      findUser.user.password,
-    );
+    const confirmPassword = await bcrypt.compare(password, findUser.password);
     if (!confirmPassword) {
       throw new UnauthorizedException('اطلاعات شما صحیح نمی باشد');
     }
 
     const paylod = {
-      mobile: findUser.user.mobile,
-      role: findUser.user.role,
-      id: findUser.user.id,
+      mobile: findUser.mobile,
+      role: findUser.role,
+      id: findUser.id,
     };
     const token = this.jwtService.sign(paylod);
 

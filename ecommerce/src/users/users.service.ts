@@ -19,12 +19,12 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     try {
-      const createUser = await this.userRepository.create(createUserDto);
+      const user = await this.userRepository.create(createUserDto);
 
-      await this.userRepository.save(createUser);
+      await this.userRepository.save(user);
 
-      createUser.password = undefined;
-      return { user: createUser };
+      user.password = undefined;
+      return user;
     } catch (err) {
       console.log(err);
 
@@ -35,7 +35,7 @@ export class UsersService {
   async findAll() {
     const users = await this.userRepository.find();
 
-    return { users };
+    return users;
   }
 
   async findOne(id: number) {
@@ -44,7 +44,7 @@ export class UsersService {
       throw new NotFoundException(`کاربر با آیدی ${id} پیدا نشد`);
     }
 
-    return { user };
+    return user;
   }
 
   async findOneByMobile(mobile: string) {
@@ -53,7 +53,16 @@ export class UsersService {
       throw new NotFoundException('کاربر با مشخصات فوق پیدا نشد');
     }
 
-    return { user };
+    return user;
+  }
+
+  async existMobile(mobile: string) {
+    const user = await this.userRepository.findOneBy({ mobile });
+    if (user) {
+      throw new BadRequestException('Mobile phone has already exist');
+    }
+
+    return true;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
