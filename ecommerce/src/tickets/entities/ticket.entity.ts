@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -24,6 +25,12 @@ export class Ticket {
 
   @ManyToOne(() => User, (user) => user.tickets)
   user: User;
+
+  @ManyToOne(() => Ticket, (ticket) => ticket.replies, { nullable: true })
+  replyTo: Ticket;
+
+  @OneToMany(() => Ticket, (ticket) => ticket.replyTo)
+  replies: Ticket[];
 
   @CreateDateColumn()
   created_at: Date;
