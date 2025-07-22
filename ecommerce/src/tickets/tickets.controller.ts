@@ -40,18 +40,14 @@ export class TicketsController {
     });
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.ticketsService.findOne(+id);
-  // }
+  @Get(':id')
+  async findOne(@Param('id') id: string, @Res() res: Response) {
+    const ticket = await this.ticketsService.findOne(+id);
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateTicketDto: UpdateTicketDto) {
-  //   return this.ticketsService.update(+id, updateTicketDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.ticketsService.remove(+id);
-  // }
+    return res.status(HttpStatus.CREATED).json({
+      statusCode: HttpStatus.CREATED,
+      data: ticket,
+      message: 'تیکت با موفقیت دریافت شد',
+    });
+  }
 }

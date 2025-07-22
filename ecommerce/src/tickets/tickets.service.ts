@@ -46,4 +46,13 @@ export class TicketsService {
       .leftJoinAndSelect('tickets.replyTo', 'replyTo')
       .getMany();
   }
+
+  async findOne(id: number): Promise<Ticket> {
+    const ticket = await this.ticketsRepository.findOneOrFail({
+      where: { id },
+      relations: ['replies', 'replyTo'],
+    });
+
+    return ticket;
+  }
 }
