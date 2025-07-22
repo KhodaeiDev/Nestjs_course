@@ -38,4 +38,12 @@ export class TicketsService {
 
     return this.ticketsRepository.save(newTicket);
   }
+
+  async findAll() {
+    return await this.ticketsRepository
+      .createQueryBuilder('tickets')
+      .where('tickets.replyTo IS NULL')
+      .leftJoinAndSelect('tickets.replyTo', 'replyTo')
+      .getMany();
+  }
 }

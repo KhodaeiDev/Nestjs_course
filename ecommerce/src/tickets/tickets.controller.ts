@@ -29,10 +29,16 @@ export class TicketsController {
     });
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.ticketsService.findAll();
-  // }
+  @Get()
+  async findAll(@Res() res: Response) {
+    const tickets = await this.ticketsService.findAll();
+
+    return res.status(HttpStatus.CREATED).json({
+      statusCode: HttpStatus.CREATED,
+      data: tickets,
+      message: 'لیست تیکت ها با موفقیت دریافت شد',
+    });
+  }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {
