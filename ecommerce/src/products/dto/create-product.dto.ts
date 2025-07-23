@@ -1,4 +1,10 @@
-import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateProductDto {
   @IsString()
@@ -16,4 +22,8 @@ export class CreateProductDto {
   @IsInt()
   @IsNotEmpty()
   stock: number;
+
+  @IsOptional()
+  @IsArray()
+  categoryIds?: string;
 }
