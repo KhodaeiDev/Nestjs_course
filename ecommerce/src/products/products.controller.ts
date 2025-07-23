@@ -33,13 +33,25 @@ export class ProductsController {
   }
 
   @Get()
-  findAll() {
-    return this.productsService.findAll();
+  async findAll(@Res() res: Response) {
+    const products = await this.productsService.findAll();
+
+    return res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      data: products,
+      message: 'لیست محصولات موفقیت دریافت شد',
+    });
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productsService.findOne(+id);
+  async findOne(@Param('id') id: string, @Res() res: Response) {
+    const product = await this.productsService.findOne(+id);
+
+    return res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      data: product,
+      message: 'محصول با موفقیت دریافت شد',
+    });
   }
 
   @Patch(':id')

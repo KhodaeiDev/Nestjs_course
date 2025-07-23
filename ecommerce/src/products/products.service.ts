@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -28,20 +28,33 @@ export class ProductsService {
 
     if (categoryIds) {
       const categories = await this.categoryRepository.findBy({
-        id: In([categoryIds]),
+        id: In(categoryIds),
       });
+      if (categories.length === 0)
+        throw new NotFoundException('دسته بندی مورد نظر یافت نشد');
       product.categories = categories;
     }
 
     return await this.productRepository.save(product);
   }
 
-  findAll() {
-    return `This action returns all products`;
+  async findAll(): Promise<Product[]> {
+    const products = await this.productRepository.find({
+      relations: ['categories'],
+    });
+
+    return products;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: number): Promise<Product> {
+    const product = await this.productRepository.findOne({
+      where: { id },
+      relations: ['categories'],
+    });
+
+    if (!Product) throw new NotFoundException('محصول مورد نظر یافت نشد');
+
+    return product;
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {

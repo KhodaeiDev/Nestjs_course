@@ -25,5 +25,5 @@ export class CreateProductDto {
 
   @IsOptional()
   @IsArray()
-  categoryIds?: string;
+  categoryIds?: number[];
 }
