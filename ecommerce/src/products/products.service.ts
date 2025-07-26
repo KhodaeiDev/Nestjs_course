@@ -57,8 +57,28 @@ export class ProductsService {
     return product;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: number, updateProductDto: UpdateProductDto) {
+    const { title, description, price, stock, categoryIds } = updateProductDto;
+
+    const product: Product = await this.findOne(id);
+
+    if (title) product.title = title;
+    if (description) product.description = description;
+    if (price) product.price = price;
+    if (stock) product.stock = stock;
+    if (categoryIds) {
+      const categories = await this.categoryRepository.findBy({
+        id: In(categoryIds),
+      });
+
+      console.log(categories);
+
+      if (categories.length === 0)
+        throw new NotFoundException('دسته بندی مورد نظر یافت نشد');
+      product.categories = categories;
+    }
+
+    return product;
   }
 
   remove(id: number) {
