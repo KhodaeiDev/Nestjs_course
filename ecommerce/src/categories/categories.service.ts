@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -24,5 +24,25 @@ export class CategoriesService {
     });
 
     return categories;
+  }
+
+  async findOne(id: number): Promise<Category> {
+    const category = await this.categoryRepository.findOne({
+      where: { id },
+      relations: ['products'],
+    });
+
+    return category;
+  }
+
+  async safeRemove(id: number): Promise<void> {
+    const category = await this.findOne(id);
+
+    if (category.products.length > 0)
+      throw new BadRequestException(
+        'دسته بندی مورد نظر دارای محصول میباشد و نمیتوان حذف کرد',
+      );
+
+    await this.categoryRepository.remove(category);
   }
 }

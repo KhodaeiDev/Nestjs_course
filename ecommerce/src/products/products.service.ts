@@ -71,8 +71,6 @@ export class ProductsService {
         id: In(categoryIds),
       });
 
-      console.log(categories);
-
       if (categories.length === 0)
         throw new NotFoundException('دسته بندی مورد نظر یافت نشد');
       product.categories = categories;

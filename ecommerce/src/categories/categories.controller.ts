@@ -42,18 +42,30 @@ export class CategoriesController {
     });
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.categoriesService.findOne(+id);
-  // }
+  @Get(':id')
+  async findOne(@Param('id') id: string, @Res() res: Response) {
+    const category = await this.categoriesService.findOne(+id);
+
+    return res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      data: category,
+      message: 'دسته بندی با موفقیت دریافت شد',
+    });
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string, @Res() res: Response) {
+    await this.categoriesService.safeRemove(+id);
+
+    return res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      data: null,
+      message: 'دسته بندی با موفقیت حذف شد',
+    });
+  }
 
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
   //   return this.categoriesService.update(+id, updateCategoryDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.categoriesService.remove(+id);
   // }
 }
