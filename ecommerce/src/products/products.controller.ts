@@ -8,6 +8,7 @@ import {
   Delete,
   Res,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -66,6 +67,24 @@ export class ProductsController {
       statusCode: HttpStatus.OK,
       data: product,
       message: 'محصول با موفقیت آپدیت شد',
+    });
+  }
+
+  @Post('toggleBookmarks')
+  async toggleBookmark(
+    @Query('userId') userId: string,
+    @Query('productId') productId: string,
+    @Res() res: Response,
+  ) {
+    const toggleBookmark = await this.productsService.toggleBookmark(
+      +userId,
+      +productId,
+    );
+
+    return res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      data: null,
+      message: toggleBookmark,
     });
   }
 

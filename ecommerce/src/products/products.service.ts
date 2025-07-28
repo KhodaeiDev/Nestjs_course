@@ -1,10 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { In, Repository } from 'typeorm';
 import { Category } from 'src/categories/entities/category.entity';
+import { User } from 'src/users/entities/user.entity';
+import { Bookmark } from './entities/bookmark.entity';
 
 @Injectable()
 export class ProductsService {
@@ -14,6 +20,12 @@ export class ProductsService {
 
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
+
+    @InjectRepository(Bookmark)
+    private readonly bookmarkRepository: Repository<Bookmark>,
+
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   async create(createProductDto: CreateProductDto): Promise<Product> {
@@ -77,6 +89,36 @@ export class ProductsService {
     }
 
     return product;
+  }
+
+  async toggleBookmark(userId: number, productId: number): Promise<string> {
+    const product = await this.productRepository.findOne({
+      where: { id: productId },
+    });
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user || !product)
+      throw new NotFoundException('محصول یا کاربر مورد نظر یافت نشد');
+
+    const existBookmark = await this.bookmarkRepository.findOne({
+      where: { user: { id: userId }, product: { id: productId } },
+    });
+
+    if (existBookmark) {
+      await this.bookmarkRepository.remove(existBookmark);
+      return 'محصول مورد نظر با موفقیت از بوک مارک ها حذف شد';
+    } else {
+      const bookmark = this.bookmarkRepository.create({
+        user,
+        product,
+      });
+
+      await this.bookmarkRepository.save(bookmark);
+
+      return 'محصول مورد نظر به لیست بوک مارک ها اضافه شد';
+    }
   }
 
   remove(id: number) {
