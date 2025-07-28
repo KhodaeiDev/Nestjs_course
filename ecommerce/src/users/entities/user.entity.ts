@@ -9,6 +9,7 @@ import {
 import userRoleEnum from '../enums/userRoleEnum';
 import { Address } from 'src/address/entities/address.entity';
 import { Ticket } from 'src/tickets/entities/ticket.entity';
+import { Bookmark } from 'src/products/entities/bookmark.entity';
 
 @Entity()
 export class User {
@@ -32,6 +33,9 @@ export class User {
 
   @OneToMany(() => Ticket, (ticket) => ticket.user)
   tickets: Ticket[];
+
+  @OneToMany(() => Bookmark, (bookmark) => bookmark.user)
+  bookmarks: Bookmark[];
 
   @CreateDateColumn()
   createdAt: Date;
