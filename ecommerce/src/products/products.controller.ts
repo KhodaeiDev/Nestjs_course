@@ -88,6 +88,24 @@ export class ProductsController {
     });
   }
 
+  @Post('addToBasket')
+  async addToBasket(
+    @Query('userId') userId: string,
+    @Query('productId') productId: string,
+    @Res() res: Response,
+  ) {
+    const addToBasket = await this.productsService.addToBasket(
+      +userId,
+      +productId,
+    );
+
+    return res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      data: addToBasket,
+      message: 'محصول با موفقیت به سبد خرید اضافه شد',
+    });
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.productsService.remove(+id);
