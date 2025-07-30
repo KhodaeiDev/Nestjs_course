@@ -106,6 +106,24 @@ export class ProductsController {
     });
   }
 
+  @Delete('removeFromBasket')
+  async removeFromBasket(
+    @Query('userId') userId: string,
+    @Query('productId') productId: string,
+    @Res() res: Response,
+  ) {
+    const removeFromBasket = await this.productsService.removeFromBasket(
+      +userId,
+      +productId,
+    );
+
+    return res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      data: removeFromBasket,
+      message: 'محصول با موفقیت از سبد خرید حذف شد',
+    });
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.productsService.remove(+id);

@@ -141,6 +141,30 @@ export class ProductsService {
     return user;
   }
 
+  async removeFromBasket(userId: number, productId: number) {
+    const product = await this.productRepository.findOne({
+      where: { id: productId },
+    });
+
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['basket_items'],
+    });
+
+    if (!product || !user)
+      throw new NotFoundException('محصول یا کاربر مورد نظر یافت نشد');
+
+    const index = user.basket_items.findIndex((item) => item.id === product.id);
+
+    if (index === -1)
+      throw new NotFoundException('محصول درون سبد خرید شما وجود ندارد');
+
+    user.basket_items.splice(index, 1);
+    await this.userRepository.save(user);
+
+    return user;
+  }
+
   remove(id: number) {
     return `This action removes a #${id} product`;
   }
