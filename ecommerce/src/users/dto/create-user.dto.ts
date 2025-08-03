@@ -9,6 +9,7 @@ import {
 } from 'class-validator';
 import userRoleEnum from '../enums/userRoleEnum';
 import { Transform } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
   @IsString()
@@ -26,6 +27,7 @@ export class CreateUserDto {
   @MinLength(8)
   password: string;
 
+  @ApiProperty({ enum: userRoleEnum, example: userRoleEnum })
   @IsEnum(userRoleEnum)
   @IsOptional()
   role: userRoleEnum;
