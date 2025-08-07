@@ -10,7 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class IpTrackerService {
-  private readonly MAX_REQUEST = 4;
+  private readonly MAX_REQUEST = 10;
   private readonly WINDOW_MINUTE = 1;
   private readonly BLOCK_MINUTE = 1;
   private readonly TEHRAN_TIME = 3.5;
