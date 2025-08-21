@@ -7,7 +7,6 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.useGlobalGuards(new JwtAuthGuard());
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
