@@ -16,6 +16,8 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RoleGuard } from './auth/guards/role.guard';
 import { TasksModule } from './tasks/tasks.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { SmsModule } from './sms/sms.module';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
   imports: [
@@ -24,6 +26,14 @@ import { ScheduleModule } from '@nestjs/schedule';
     }),
     // Cron Job
     ScheduleModule.forRoot(),
+
+    // Queue
+    BullModule.forRoot({
+      redis: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
 
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -44,6 +54,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     CategoriesModule,
     IpTrackerModule,
     TasksModule,
+    SmsModule,
   ],
   controllers: [AppController],
   providers: [
