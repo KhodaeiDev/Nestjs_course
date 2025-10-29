@@ -14,12 +14,17 @@ import { IpTrackerMiddleware } from './ip-tracker/ip-tracker.middleware';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RoleGuard } from './auth/guards/role.guard';
+import { TasksModule } from './tasks/tasks.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    // Cron Job
+    ScheduleModule.forRoot(),
+
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -38,6 +43,7 @@ import { RoleGuard } from './auth/guards/role.guard';
     ProductsModule,
     CategoriesModule,
     IpTrackerModule,
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [
