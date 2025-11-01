@@ -18,11 +18,25 @@ import { TasksModule } from './tasks/tasks.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SmsModule } from './sms/sms.module';
 import { BullModule } from '@nestjs/bull';
+import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-ioredis-yet';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+
+    //redis Connection
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useFactory: async () => ({
+        store: await redisStore({
+          host: 'localhost',
+          port: 6379,
+          ttl: 3600,
+        }),
+      }),
     }),
     // Cron Job
     ScheduleModule.forRoot(),
